@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-0": {
-            "ReliqArts\\ThujohnTwitter": "src/"
+            "ReliqArts\\Thujohn\\Twitter": "src/"
         }
     },
     "minimum-stability": "stable"
