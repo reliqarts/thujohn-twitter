@@ -1,37 +1,39 @@
 # Twitter
 
-Twitter API for Laravel 4/5
+---
+
+Literally the Twitter API built by thujohn, with support for Laravel ^6.0.
 
 You need to create an application and create your access token in the [Application Management](https://apps.twitter.com/).
 
-[![Build Status](https://travis-ci.org/thujohn/twitter.png?branch=master)](https://travis-ci.org/thujohn/twitter)
+[![Build Status](https://travis-ci.org/reliqarts/thujohn-twitter.png?branch=master)](https://travis-ci.org/reliqarts/thujohn-twitter)
 
 
 ## Installation
 
-Add `thujohn/twitter` to `composer.json`.
+Add `reliqarts/thujohn-twitter` to `composer.json`.
 ```
-"thujohn/twitter": "~2.0"
+"reliqarts/thujohn-twitter": "^2.0"
 ```
 
 Run `composer update` to pull down the latest version of Twitter.
 
 Or run
 ```
-composer require thujohn/twitter
+composer require reliqarts/thujohn-twitter
 ```
 
 Now open up `/config/app.php` and add the service provider to your `providers` array.
 ```php
 'providers' => [
-	Thujohn\Twitter\TwitterServiceProvider::class,
+	ReliqArts\Thujohn\Twitter\TwitterServiceProvider::class,
 ]
 ```
 
 Now add the alias.
 ```php
 'aliases' => [
-	'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+	'Twitter' => ReliqArts\Thujohn\Twitter\Facades\Twitter::class,
 ]
 ```
 
@@ -40,7 +42,7 @@ Now add the alias.
 
 The package now requires PHP >= 5.4.0
 
-Facade has changed (Thujohn\Twitter\Facades\Twitter)
+Facade has changed (ReliqArts\Thujohn\Twitter\Facades\Twitter)
 
 Config file has been updated (debug, UPLOAD_URL, ACCESS_TOKEN_URL, REQUEST_TOKEN_URL)
 
@@ -51,16 +53,16 @@ set_new_config() has been renamed reconfig()
 
 ### Laravel 4
 
-Run `php artisan config:publish thujohn/twitter` and modify the config file with your own informations.
+Run `php artisan config:publish reliqarts/thujohn-twitter` and modify the config file with your own informations.
 ```
-/app/config/packages/thujohn/twitter/config.php
+/app/config/packages/reliqarts/thujohn-twitter/config.php
 ```
 Also, make sure to remove the env in the config file and replace it with your information.
 
 
 ### Laravel 5
 
-Run `php artisan vendor:publish --provider="Thujohn\Twitter\TwitterServiceProvider"` and modify the config file with your own information.
+Run `php artisan vendor:publish --provider="ReliqArts\Thujohn\Twitter\TwitterServiceProvider"` and modify the config file with your own information.
 ```
 /config/ttwitter.php
 ```

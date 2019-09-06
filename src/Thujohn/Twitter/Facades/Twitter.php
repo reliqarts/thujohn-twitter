@@ -1,4 +1,4 @@
-<?php namespace Thujohn\Twitter\Facades;
+<?php namespace ReliqArts\Thujohn\Twitter\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -9,6 +9,6 @@ class Twitter extends Facade {
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'Thujohn\Twitter\Twitter'; }
+	protected static function getFacadeAccessor() { return 'ReliqArts\Thujohn\Twitter\Twitter'; }
 
 }
