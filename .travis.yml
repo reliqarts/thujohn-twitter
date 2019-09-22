@@ -2,10 +2,34 @@ language: php
 
 php:
   - 7.2
+  - 7.3
   - hhvm
+
+env:
+  - LARAVEL='^6.0' COMPOSER_FLAGS='--prefer-stable'
+  - LARAVEL='^6.0' COMPOSER_FLAGS='--prefer-lowest'
+  - LARAVEL='6.x-dev'
 
 sudo: false
 
-install: travis_retry composer install --no-interaction --prefer-source
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: LARAVEL='6.x-dev'
+    - env: LARAVEL='^6.0' COMPOSER_FLAGS='--prefer-lowest'
 
-script: phpunit
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - travis_retry composer self-update
+  - travis_retry composer require --no-update --no-interaction "illuminate/support:${LARAVEL}"
+
+install:
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist --no-suggest
+
+script: ./vendor/bin/phpunit --verbose --coverage-clover=coverage.xml
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

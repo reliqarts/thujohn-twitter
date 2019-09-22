@@ -1,11 +1,11 @@
-<?php namespace ReliqArts\Thujohn\Twitter;
+<?php
 
-use RunTimeException;
+namespace ReliqArts\Thujohn\Twitter;
+
 use Carbon\Carbon as Carbon;
-use Illuminate\Session\Store as SessionStore;
+use DateTime;
 use Illuminate\Config\Repository as Config;
-use tmhOAuth;
-
+use Illuminate\Session\Store as SessionStore;
 use ReliqArts\Thujohn\Twitter\Traits\AccountTrait;
 use ReliqArts\Thujohn\Twitter\Traits\BlockTrait;
 use ReliqArts\Thujohn\Twitter\Traits\DirectMessageTrait;
@@ -19,10 +19,11 @@ use ReliqArts\Thujohn\Twitter\Traits\SearchTrait;
 use ReliqArts\Thujohn\Twitter\Traits\StatusTrait;
 use ReliqArts\Thujohn\Twitter\Traits\TrendTrait;
 use ReliqArts\Thujohn\Twitter\Traits\UserTrait;
+use RunTimeException;
+use tmhOAuth;
 
 class Twitter extends tmhOAuth
 {
-
     use AccountTrait,
         BlockTrait,
         DirectMessageTrait,
@@ -38,17 +39,17 @@ class Twitter extends tmhOAuth
         UserTrait;
 
     /**
-     * Store the config values
+     * Store the config values.
      */
     private $tconfig;
 
     /**
-     * Store the config values for the parent class
+     * Store the config values for the parent class.
      */
     private $parent_config;
 
     /**
-     * Only for debugging
+     * Only for debugging.
      */
     private $debug;
 
@@ -60,7 +61,7 @@ class Twitter extends tmhOAuth
     {
         if ($config->has('ttwitter::config')) {
             $this->tconfig = $config->get('ttwitter::config');
-        } else if ($config->get('ttwitter')) {
+        } elseif ($config->get('ttwitter')) {
             $this->tconfig = $config->get('ttwitter');
         } else {
             throw new RunTimeException('No config found');
@@ -77,7 +78,7 @@ class Twitter extends tmhOAuth
         if ($session->has('access_token')) {
             $access_token = $session->get('access_token');
 
-            if (is_array($access_token) && isset($access_token['oauth_token']) && isset($access_token['oauth_token_secret']) && !empty($access_token['oauth_token']) && !empty($access_token['oauth_token_secret'])) {
+            if (is_array($access_token) && isset($access_token['oauth_token'], $access_token['oauth_token_secret']) && !empty($access_token['oauth_token']) && !empty($access_token['oauth_token_secret'])) {
                 $this->parent_config['token'] = $access_token['oauth_token'];
                 $this->parent_config['secret'] = $access_token['oauth_token_secret'];
             }
@@ -94,9 +95,7 @@ class Twitter extends tmhOAuth
     /**
      * Set new config values for the OAuth class like different tokens.
      *
-     * @param Array $config An array containing the values that should be overwritten.
-     *
-     * @return void
+     * @param array $config an array containing the values that should be overwritten
      */
     public function reconfig($config)
     {
@@ -108,22 +107,15 @@ class Twitter extends tmhOAuth
         return $this;
     }
 
-    private function log($message)
-    {
-        if ($this->debug) {
-            $this->log[] = $message;
-        }
-    }
-
     public function logs()
     {
         return $this->log;
     }
 
     /**
-     * Get a request_token from Twitter
+     * Get a request_token from Twitter.
      *
-     * @param String $oauth_callback [Optional] The callback provided for Twitter's API. The user will be redirected
+     * @param string $oauth_callback [Optional] The callback provided for Twitter's API. The user will be redirected
      *                               there after authorizing your app on Twitter.
      *
      * @returns Array|Bool a key/value array containing oauth_token and oauth_token_secret in case of success
@@ -140,7 +132,7 @@ class Twitter extends tmhOAuth
 
         $response = $this->response;
 
-        if (isset($response['code']) && $response['code'] == 200 && !empty($response)) {
+        if (isset($response['code']) && $response['code'] === 200 && !empty($response)) {
             $get_parameters = $response['response'];
             $token = [];
             parse_str($get_parameters, $token);
@@ -149,15 +141,17 @@ class Twitter extends tmhOAuth
         // Return the token if it was properly retrieved
         if (isset($token['oauth_token'], $token['oauth_token_secret'])) {
             return $token;
-        } else {
-            throw new RunTimeException($response['response'], $response['code']);
         }
+
+        throw new RunTimeException($response['response'], $response['code']);
     }
 
     /**
-     * Get an access token for a logged in user
+     * Get an access token for a logged in user.
      *
      * @returns Array|Bool key/value array containing the token in case of success
+     *
+     * @param null|mixed $oauth_verifier
      */
     public function getAccessToken($oauth_verifier = null)
     {
@@ -171,7 +165,7 @@ class Twitter extends tmhOAuth
 
         $response = $this->response;
 
-        if (isset($response['code']) && $response['code'] == 200 && !empty($response)) {
+        if (isset($response['code']) && $response['code'] === 200 && !empty($response)) {
             $get_parameters = $response['response'];
             $token = [];
             parse_str($get_parameters, $token);
@@ -189,9 +183,13 @@ class Twitter extends tmhOAuth
     }
 
     /**
-     * Get the authorize URL
+     * Get the authorize URL.
      *
      * @returns string
+     *
+     * @param mixed $token
+     * @param mixed $sign_in_with_twitter
+     * @param mixed $force_login
      */
     public function getAuthorizeURL($token, $sign_in_with_twitter = true, $force_login = false)
     {
@@ -201,11 +199,12 @@ class Twitter extends tmhOAuth
 
         if ($force_login) {
             return $this->tconfig['AUTHENTICATE_URL'] . "?oauth_token={$token}&force_login=true";
-        } else if (empty($sign_in_with_twitter)) {
-            return $this->tconfig['AUTHORIZE_URL'] . "?oauth_token={$token}";
-        } else {
-            return $this->tconfig['AUTHENTICATE_URL'] . "?oauth_token={$token}";
         }
+        if (empty($sign_in_with_twitter)) {
+            return $this->tconfig['AUTHORIZE_URL'] . "?oauth_token={$token}";
+        }
+
+        return $this->tconfig['AUTHENTICATE_URL'] . "?oauth_token={$token}";
     }
 
     public function query($name, $requestMethod = 'GET', $parameters = [], $multipart = false, $extension = 'json')
@@ -264,7 +263,7 @@ class Twitter extends tmhOAuth
                 }
             } else {
                 $error_code = $response['code'];
-                $error_msg = ($error_code == 503) ? 'Service Unavailable' : 'Unknown error';
+                $error_msg = ($error_code === 503) ? 'Service Unavailable' : 'Unknown error';
             }
 
             $this->log('ERROR_CODE : ' . $error_code);
@@ -276,15 +275,18 @@ class Twitter extends tmhOAuth
         }
 
         switch ($format) {
-            default :
-            case 'object' :
+            default:
+            case 'object':
                 $response = $this->jsonDecode($response['response']);
+
                 break;
-            case 'json'   :
+            case 'json':
                 $response = $response['response'];
+
                 break;
-            case 'array'  :
+            case 'array':
                 $response = $this->jsonDecode($response['response'], true);
+
                 break;
         }
 
@@ -306,7 +308,7 @@ class Twitter extends tmhOAuth
         if (is_object($tweet)) {
             $type = 'object';
             $tweet = $this->jsonDecode(json_encode($tweet), true);
-        } else if (is_array($tweet)) {
+        } elseif (is_array($tweet)) {
             $type = 'array';
         } else {
             $type = 'text';
@@ -320,14 +322,14 @@ class Twitter extends tmhOAuth
         $patterns['hashtag'] = '(?:(?<=\s)|^)#(\w*[\p{L}-\d\p{Cyrillic}\d]+\w*)';
         $patterns['long_url'] = '>(([[:alnum:]]+:\/\/)|www\.)?([^[:space:]]{12,22})([^[:space:]]*)([^[:space:]]{12,22})([[:alnum:]#?\/&=])<';
 
-        if ($type == 'text') {
+        if ($type === 'text') {
             // URL
             $pattern = '(?xi)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))';
             $text = preg_replace_callback('#' . $patterns['url'] . '#i', function ($matches) {
                 $input = $matches[0];
-                $url = preg_match('!^https?://!i', $input) ? $input : "http://$input";
+                $url = preg_match('!^https?://!i', $input) ? $input : "http://${input}";
 
-                return '<a href="' . $url . '" target="_blank" rel="nofollow">' . "$input</a>";
+                return '<a href="' . $url . '" target="_blank" rel="nofollow">' . "${input}</a>";
             }, $text);
         } else {
             $text = $tweet['text'];
@@ -354,16 +356,16 @@ class Twitter extends tmhOAuth
         }
 
         // Mailto
-        $text = preg_replace('/' . $patterns['mailto'] . '/i', "<a href=\"mailto:\\1\">\\1</a>", $text);
+        $text = preg_replace('/' . $patterns['mailto'] . '/i', '<a href="mailto:\\1">\\1</a>', $text);
 
         // User
-        $text = preg_replace('/' . $patterns['user'] . '/i', " <a href=\"https://twitter.com/\\1\" target=\"_blank\">@\\1</a>", $text);
+        $text = preg_replace('/' . $patterns['user'] . '/i', ' <a href="https://twitter.com/\\1" target="_blank">@\\1</a>', $text);
 
         // Hashtag
-        $text = preg_replace('/' . $patterns['hashtag'] . '/ui', "<a href=\"https://twitter.com/search?q=%23\\1\" target=\"_blank\">#\\1</a>", $text);
+        $text = preg_replace('/' . $patterns['hashtag'] . '/ui', '<a href="https://twitter.com/search?q=%23\\1" target="_blank">#\\1</a>', $text);
 
         // Long URL
-        $text = preg_replace('/' . $patterns['long_url'] . '/', ">\\3...\\5\\6<", $text);
+        $text = preg_replace('/' . $patterns['long_url'] . '/', '>\\3...\\5\\6<', $text);
 
         // Remove multiple spaces
         $text = preg_replace('/\s+/', ' ', $text);
@@ -373,10 +375,10 @@ class Twitter extends tmhOAuth
 
     public function ago($timestamp)
     {
-        if (is_numeric($timestamp) && (int)$timestamp == $timestamp) {
+        if (is_numeric($timestamp) && (int)$timestamp === $timestamp) {
             $carbon = Carbon::createFromTimeStamp($timestamp);
         } else {
-            $dt = new \DateTime($timestamp);
+            $dt = new DateTime($timestamp);
             $carbon = Carbon::instance($dt);
         }
 
@@ -420,12 +422,19 @@ class Twitter extends tmhOAuth
         return $this;
     }
 
+    private function log($message)
+    {
+        if ($this->debug) {
+            $this->log[] = $message;
+        }
+    }
+
     private function jsonDecode($json, $assoc = false)
     {
         if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
             return json_decode($json, $assoc, 512, JSON_BIGINT_AS_STRING);
-        } else {
-            return json_decode($json, $assoc);
         }
+
+        return json_decode($json, $assoc);
     }
 }

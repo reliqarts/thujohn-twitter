@@ -1,6 +1,6 @@
 {
   "name": "reliqarts/thujohn-twitter",
-  "description": "Twitter API for Laravel. Literally the Twitter API built by thujohn, with support for Laravel ^6.0.",
+  "description": "Twitter API for Laravel. Literally the Twitter API built by thujohn, supporting Laravel ^6.0.",
   "keywords": [
     "thujohn",
     "twitter",
@@ -21,14 +21,20 @@
   "require": {
     "php": "^7.2",
     "illuminate/support": "^6.0",
-    "themattharris/tmhoauth": "0.8.4"
+    "themattharris/tmhoauth": "0.8.4",
+    "vlucas/phpdotenv": "^3.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.3",
+    "phpro/grumphp": "^0.15.2",
+    "wearejust/grumphp-extra-tasks": "^2.2"
   },
   "replace": {
     "thujohn/twitter": "2.2.5"
   },
   "autoload": {
-    "psr-0": {
-      "ReliqArts\\Thujohn\\Twitter": "src/"
+    "psr-4": {
+      "ReliqArts\\Thujohn\\Twitter\\": "src/"
     }
   },
   "autoload-dev": {
@@ -36,8 +42,18 @@
       "ReliqArts\\Thujohn\\Twitter\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "stable",
-  "require-dev": {
-    "phpunit/phpunit": "^8.3"
-  }
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ReliqArts\\Thujohn\\Twitter\\ServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
 }
