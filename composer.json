@@ -51,7 +51,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "ReliqArts\\Thujohn\\Twitter\\ServiceProvider"
+        "ReliqArts\\Thujohn\\Twitter\\TwitterServiceProvider"
       ]
     }
   },
