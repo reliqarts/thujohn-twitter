@@ -3,7 +3,6 @@ language: php
 php:
   - 7.2
   - 7.3
-  - hhvm
 
 env:
   - LARAVEL='^6.0' COMPOSER_FLAGS='--prefer-stable'
