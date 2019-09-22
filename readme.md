@@ -7,7 +7,14 @@ Literally the Twitter API built by thujohn, with support for Laravel ^6.0.
 You need to create an application and create your access token in the [Application Management](https://apps.twitter.com/).
 
 [![Build Status](https://travis-ci.org/reliqarts/thujohn-twitter.png?branch=master)](https://travis-ci.org/reliqarts/thujohn-twitter)
+[![License](https://poser.pugx.org/reliqarts/thujohn-twitter/license?format=flat-square)](https://packagist.org/packages/reliqarts/thujohn-twitter)
+[![Latest Stable Version](https://poser.pugx.org/reliqarts/thujohn-twitter/version?format=flat-square)](https://packagist.org/packages/reliqarts/thujohn-twitter)
+[![Latest Unstable Version](https://poser.pugx.org/reliqarts/thujohn-twitter/v/unstable?format=flat-square)](//packagist.org/packages/reliqarts/thujohn-twitter)
 
+#### Note on Compatibility
+
+This package intentionally does not support Laravel < 6.0. For Laravel 5 and below please see: [thujohn/twitter
+](https://github.com/thujohn/twitter).
 
 ## Installation
 
@@ -23,50 +30,22 @@ Or run
 composer require reliqarts/thujohn-twitter
 ```
 
-Now open up `/config/app.php` and add the service provider to your `providers` array.
-```php
-'providers' => [
-	ReliqArts\Thujohn\Twitter\TwitterServiceProvider::class,
-]
-```
-
-Now add the alias.
+Now add the alias. (optional)
 ```php
 'aliases' => [
 	'Twitter' => ReliqArts\Thujohn\Twitter\Facades\Twitter::class,
 ]
 ```
 
-
-## Upgrading from 1.x.x
-
-The package now requires PHP >= 5.4.0
-
-Facade has changed (ReliqArts\Thujohn\Twitter\Facades\Twitter)
-
-Config file has been updated (debug, UPLOAD_URL, ACCESS_TOKEN_URL, REQUEST_TOKEN_URL)
-
-set_new_config() has been renamed reconfig()
-
-
 ## Configuration 
 
-### Laravel 4
-
-Run `php artisan config:publish reliqarts/thujohn-twitter` and modify the config file with your own informations.
-```
-/app/config/packages/reliqarts/thujohn-twitter/config.php
-```
-Also, make sure to remove the env in the config file and replace it with your information.
-
-
-### Laravel 5
+### Laravel 6
 
 Run `php artisan vendor:publish --provider="ReliqArts\Thujohn\Twitter\TwitterServiceProvider"` and modify the config file with your own information.
 ```
 /config/ttwitter.php
 ```
-With Laravel 5, it's simple to edit the config.php file - in fact you don't even need to touch it! Just add the following to your .env file and you'll be on your way:
+With Laravel 6, it's simple to edit the config.php file - in fact you don't even need to touch it! Just add the following to your .env file and you'll be on your way:
 ```
 TWITTER_CONSUMER_KEY=
 TWITTER_CONSUMER_SECRET=

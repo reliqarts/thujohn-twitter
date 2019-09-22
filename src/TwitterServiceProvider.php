@@ -1,12 +1,11 @@
-<?php namespace ReliqArts\Thujohn\Twitter;
+<?php
+
+namespace ReliqArts\Thujohn\Twitter;
 
 use Illuminate\Support\ServiceProvider;
 
-use ReliqArts\Thujohn\Twitter\Twitter;
-
 class TwitterServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -15,50 +14,34 @@ class TwitterServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
         $app = $this->app ?: app();
-
         $appVersion = method_exists($app, 'version') ? $app->version() : $app::VERSION;
-
         $laravelVersion = substr($appVersion, 0, strpos($appVersion, '.'));
-
         $isLumen = false;
 
         if (strpos(strtolower($laravelVersion), 'lumen') !== false) {
             $isLumen = true;
-
             $laravelVersion = str_replace('Lumen (', '', $laravelVersion);
         }
 
-        if ($laravelVersion == 5) {
-            $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'ttwitter');
+        if ($laravelVersion === 5) {
+            $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'ttwitter');
 
             if ($isLumen) {
                 $this->publishes([
-                    __DIR__ . '/../config/config.php' => base_path('config/ttwitter.php'),
+                    __DIR__ . '/config/config.php' => base_path('config/ttwitter.php'),
                 ]);
             } else {
                 $this->publishes([
-                    __DIR__ . '/../../config/config.php' => config_path('ttwitter.php'),
+                    __DIR__ . '/../config/config.php' => config_path('ttwitter.php'),
                 ]);
             }
-        } elseif ($laravelVersion == 4) {
-            $this->package('reliqarts/thujohntwitter', 'ttwitter', __DIR__ . '/../..');
+        } elseif ($laravelVersion === 4) {
+            $this->package('reliqarts/thujohn-twitter', 'ttwitter', __DIR__ . '/../src');
         }
 
         $this->app->singleton(Twitter::class, function () use ($app) {
@@ -75,5 +58,4 @@ class TwitterServiceProvider extends ServiceProvider
     {
         return ['ttwitter'];
     }
-
 }
