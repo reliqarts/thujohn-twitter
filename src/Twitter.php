@@ -19,7 +19,7 @@ use ReliqArts\Thujohn\Twitter\Traits\SearchTrait;
 use ReliqArts\Thujohn\Twitter\Traits\StatusTrait;
 use ReliqArts\Thujohn\Twitter\Traits\TrendTrait;
 use ReliqArts\Thujohn\Twitter\Traits\UserTrait;
-use RunTimeException;
+use RuntimeException;
 use tmhOAuth;
 
 class Twitter extends tmhOAuth
@@ -64,7 +64,7 @@ class Twitter extends tmhOAuth
         } elseif ($config->get('ttwitter')) {
             $this->tconfig = $config->get('ttwitter');
         } else {
-            throw new RunTimeException('No config found');
+            throw new RuntimeException('No config found');
         }
 
         $this->debug = (isset($this->tconfig['debug']) && $this->tconfig['debug']) ? true : false;
@@ -118,7 +118,7 @@ class Twitter extends tmhOAuth
      * @param string $oauth_callback [Optional] The callback provided for Twitter's API. The user will be redirected
      *                               there after authorizing your app on Twitter.
      *
-     * @returns Array|Bool a key/value array containing oauth_token and oauth_token_secret in case of success
+     * @returns array|bool a key/value array containing oauth_token and oauth_token_secret in case of success
      */
     public function getRequestToken($oauth_callback = null)
     {
@@ -143,13 +143,13 @@ class Twitter extends tmhOAuth
             return $token;
         }
 
-        throw new RunTimeException($response['response'], $response['code']);
+        throw new RuntimeException($response['response'], $response['code']);
     }
 
     /**
      * Get an access token for a logged in user.
      *
-     * @returns Array|Bool key/value array containing the token in case of success
+     * @returns array|bool key/value array containing the token in case of success
      *
      * @param null|mixed $oauth_verifier
      */
@@ -179,7 +179,7 @@ class Twitter extends tmhOAuth
             return $token;
         }
 
-        throw new RunTimeException($response['response'], $response['code']);
+        throw new RuntimeException($response['response'], $response['code']);
     }
 
     /**
@@ -271,7 +271,7 @@ class Twitter extends tmhOAuth
 
             $this->setError($error_code, $error_msg);
 
-            throw new RunTimeException('[' . $error_code . '] ' . $error_msg, $response['code']);
+            throw new RuntimeException('[' . $error_code . '] ' . $error_msg, $response['code']);
         }
 
         switch ($format) {

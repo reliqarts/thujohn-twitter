@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ReliqArts\Thujohn\Twitter\Tests;
+namespace ReliqArts\Thujohn\Twitter\Tests\Unit;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -11,22 +11,13 @@ use ReliqArts\Thujohn\Twitter\Twitter;
 
 /**
  * @internal
- * @coversNothing
+ * @coversDefaultClass \ReliqArts\Thujohn\Twitter\Twitter
  */
 final class TwitterTest extends TestCase
 {
     /**
-     * @param string $endpoint
-     * @param string $testedMethod
-     * @param array  $params
+     * @covers ::getUsers
      */
-    public function paramTest(string $endpoint, string $testedMethod, array $params)
-    {
-        $twitter = $this->getTwitterExpecting($endpoint, $params);
-
-        $twitter->{$testedMethod}($params);
-    }
-
     public function testGetUsersWithScreenName(): void
     {
         $twitter = $this->getTwitterExpecting('users/show', [
@@ -38,6 +29,9 @@ final class TwitterTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers ::getUsers
+     */
     public function testGetUsersWithId(): void
     {
         $twitter = $this->getTwitterExpecting('users/show', [
@@ -49,6 +43,9 @@ final class TwitterTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers ::getUsers
+     */
     public function testGetUsersInvalid(): void
     {
         $this->expectException(Exception::class);
@@ -60,6 +57,9 @@ final class TwitterTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers ::getUsersLookup
+     */
     public function testGetUsersLookupWithIds(): void
     {
         $twitter = $this->getTwitterExpecting('users/lookup', [
@@ -71,6 +71,9 @@ final class TwitterTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers ::getUsersLookup
+     */
     public function testGetUsersLookupWithScreenNames(): void
     {
         $twitter = $this->getTwitterExpecting('users/lookup', [
@@ -82,6 +85,9 @@ final class TwitterTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers ::getUsersLookup
+     */
     public function testGetUsersLookupInvalid(): void
     {
         $this->expectException(Exception::class);
@@ -98,6 +104,7 @@ final class TwitterTest extends TestCase
      *
      * Use a Data Provider to test this method with different params without repeating our code
      *
+     * @covers ::getList
      * @dataProvider providerGetList
      *
      * @param array $params
@@ -107,6 +114,9 @@ final class TwitterTest extends TestCase
         $this->paramTest('lists/show', 'getList', $params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetList(): array
     {
         return [
@@ -123,6 +133,7 @@ final class TwitterTest extends TestCase
     }
 
     /**
+     * @covers ::getList
      * @dataProvider providerGetListBad
      *
      * @param array $params
@@ -132,9 +143,13 @@ final class TwitterTest extends TestCase
         $this->expectException(Exception::class);
 
         $twitter = $this->getTwitter();
+
         $twitter->getList($params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetListBad(): array
     {
         return [
@@ -147,6 +162,7 @@ final class TwitterTest extends TestCase
     /**
      * getListMembers can accept list_id, or slug and owner_screen_name, or slug and owner_id.
      *
+     * @covers ::getListMembers
      * @dataProvider providerGetListMembers
      *
      * @param array $params
@@ -156,6 +172,9 @@ final class TwitterTest extends TestCase
         $this->paramTest('lists/members', 'getListMembers', $params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetListMembers(): array
     {
         return [
@@ -172,6 +191,7 @@ final class TwitterTest extends TestCase
     }
 
     /**
+     * @covers ::getListMembers
      * @dataProvider providerGetListMembersBad
      *
      * @param array $params
@@ -185,6 +205,9 @@ final class TwitterTest extends TestCase
         $twitter->getListMembers($params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetListMembersBad(): array
     {
         return [
@@ -199,6 +222,7 @@ final class TwitterTest extends TestCase
      * or slug and owner_screen_name and user_id, or slug and owner_screen_name and screen_name,
      * or slug and owner_id and user_id, or slug and owner_id and screen_name.
      *
+     * @covers ::getListMember
      * @dataProvider providerGetListMember
      *
      * @param array $params
@@ -208,6 +232,9 @@ final class TwitterTest extends TestCase
         $this->paramTest('lists/members/show', 'getListMember', $params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetListMember(): array
     {
         return [
@@ -233,6 +260,7 @@ final class TwitterTest extends TestCase
     }
 
     /**
+     * @covers ::getListMember
      * @dataProvider providerGetListMemberBad
      *
      * @param array $params
@@ -245,6 +273,9 @@ final class TwitterTest extends TestCase
         $twitter->getListMembers($params);
     }
 
+    /**
+     * @return array
+     */
     public function providerGetListMemberBad(): array
     {
         return [
@@ -283,5 +314,17 @@ final class TwitterTest extends TestCase
             );
 
         return $twitter;
+    }
+
+    /**
+     * @param string $endpoint
+     * @param string $testedMethod
+     * @param array  $params
+     */
+    private function paramTest(string $endpoint, string $testedMethod, array $params)
+    {
+        $twitter = $this->getTwitterExpecting($endpoint, $params);
+
+        $twitter->{$testedMethod}($params);
     }
 }

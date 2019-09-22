@@ -7,6 +7,9 @@ Literally the Twitter API built by thujohn, with support for Laravel ^6.0.
 You need to create an application and create your access token in the [Application Management](https://apps.twitter.com/).
 
 [![Build Status](https://travis-ci.org/reliqarts/thujohn-twitter.png?branch=master)](https://travis-ci.org/reliqarts/thujohn-twitter)
+[![License](https://poser.pugx.org/reliqarts/thujohn-twitter/license?format=flat-square)](https://packagist.org/packages/reliqarts/thujohn-twitter)
+[![Latest Stable Version](https://poser.pugx.org/reliqarts/thujohn-twitter/version?format=flat-square)](https://packagist.org/packages/reliqarts/thujohn-twitter)
+[![Latest Unstable Version](https://poser.pugx.org/reliqarts/thujohn-twitter/v/unstable?format=flat-square)](//packagist.org/packages/reliqarts/thujohn-twitter)
 
 #### Note on Compatibility
 
