@@ -1,7 +1,5 @@
 # Twitter
 
----
-
 Literally the Twitter API built by thujohn, with support for Laravel ^6.0.
 
 You need to create an application and create your access token in the [Application Management](https://apps.twitter.com/).
